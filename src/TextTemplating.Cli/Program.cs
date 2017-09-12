@@ -3,7 +3,7 @@ using System.IO;
 using Microsoft.Extensions.CommandLineUtils;
 using TextTemplating.Infrastructure;
 
-namespace TextTemplating.Cli
+namespace TextTemplating.Tools
 {
     class Program
     {
