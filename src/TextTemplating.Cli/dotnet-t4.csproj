@@ -11,10 +11,6 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="IMetadataResolveable.cs" />
-  </ItemGroup>
-
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\TTGetMetadata.targets" />

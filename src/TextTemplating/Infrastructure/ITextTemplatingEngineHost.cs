@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text;
 using Microsoft.CodeAnalysis.Emit;
 
@@ -14,6 +14,9 @@ namespace TextTemplating.Infrastructure
         /// 默认引用的名称空间
         /// </summary>
         IList<string> StandardImports { get; }
+
+        string FileExtension { get; set; }
+        Encoding Encoding { get; set; }
 
         void LogErrors(EmitResult result);
         void SetFileExtension(string extension);

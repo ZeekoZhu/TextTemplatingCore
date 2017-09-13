@@ -24,10 +24,10 @@ namespace TextTemplating.Tools
             string projectRoot = Path.GetDirectoryName(projectFilePath);
             string projectFile = Path.GetFileName(projectFilePath);
             string objDir = Path.Combine(projectRoot, "obj");
-            string targetFilePath = Path.Combine(objDir, projectFile + ".TTMetadata.targets");
+            string targetFilePath = Path.Combine(objDir, projectFile + ".TTGetMetadata.targets");
             Directory.CreateDirectory(objDir);
             string projectName = Assembly.GetExecutingAssembly().GetName().Name;
-            using (var targets = typeof(ProjectMetadata).Assembly.GetManifestResourceStream($"{projectName}.Resources.TTGetMetadata.targets"))
+            using (var targets = typeof(MsBuildProjectMetadataResolver).Assembly.GetManifestResourceStream($"{projectName}.Resources.TTGetMetadata.targets"))
             using (var outputFile = File.OpenWrite(targetFilePath))
             {
                 targets.CopyTo(outputFile);
@@ -54,11 +54,11 @@ namespace TextTemplating.Tools
 
             // reading generated metadata file
 
-            var metadatas = File.ReadAllLines(metadataFile).Select(line =>
-            {
-                var segments = line.Split(':');
-                return new KeyValuePair<string, string>(segments[0], segments[1]);
-            });
+            var metadatas = File.ReadAllLines(metadataFile)
+                .Select(line => line.Split(": "))
+                .Where(segs => segs.Length == 2)
+                .Select(segments => new KeyValuePair<string, string>(segments[0], segments[1]));
+
             File.Delete(metadataFile);
             var projectMetadata = new ProjectMetadata
             {
@@ -76,6 +76,7 @@ namespace TextTemplating.Tools
             metadata = metadata ?? ProjectMetadata;
             var outputAssemblyPath = Path.Combine(metadata.ProjectDir, metadata.OutputPath, metadata.TargetFileName);
             var assembly = Assembly.LoadFile(outputAssemblyPath);
+            
             return assembly
                 .GetReferencedAssemblies()
                 .Select(referenced => Assembly.Load(referenced).Location)

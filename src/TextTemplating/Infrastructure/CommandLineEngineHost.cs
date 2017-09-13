@@ -8,14 +8,10 @@ namespace TextTemplating.Infrastructure
 {
     public class CommandLineEngineHost : ITextTemplatingEngineHost
     {
-        public CommandLineEngineHost(string templateFilePath)
-        {
-            TemplateFilePath = templateFilePath;
-        }
 
-        public string FileExtension { get; private set; } = ".cs";
+        public string FileExtension { get; set; } = ".cs";
 
-        public Encoding Encoding { get; private set; }
+        public Encoding Encoding { get; set; }
 
         public string TemplateFilePath { get; }
 

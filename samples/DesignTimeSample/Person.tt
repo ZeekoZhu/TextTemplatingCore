@@ -1,0 +1,17 @@
+<#@ import namespace="Newtonsoft.Json" #>
+
+<#
+var people = Enumerable.Range(0, 5).Select(num =>
+    new Person
+    {
+        Name = "Mr " + num,
+        Age = num + 20
+    }
+);
+foreach (var p in people)
+{
+#>
+<#=JsonConvert.SerializeObject(p)#>
+<#
+}
+#>

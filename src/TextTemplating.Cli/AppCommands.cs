@@ -59,25 +59,12 @@ namespace TextTemplating.Tools
                 // Resolve metadata
                 var resolver = Program.DI.GetService<IMetadataResolveable>();
                 var metadata = resolver.ReadProject(projectFile);
-                
+
 
                 string className = classNameOption.Value() ?? Path.GetFileName(fileName);
                 string namespaceName = namespaceNameOption.Value() ?? metadata.RootNamespace ?? "GeneratedNameSpace";
-                try
-                {
-                    return PreprocessTemplate(filePath, outputPath, className, namespaceName);
-                }
-                catch (IOException e)
-                {
-                    switch (e)
-                    {
-                        case FileNotFoundException fe:
-                        case DirectoryNotFoundException de:
-                            Console.WriteLine(e.Message);
-                            break;
-                    }
-                    return 1;
-                }
+
+                return PreprocessTemplate(filePath, outputPath, className, namespaceName);
             });
         }
         /// <summary>
@@ -105,7 +92,37 @@ namespace TextTemplating.Tools
         public static void TransformCommand(CommandLineApplication command)
         {
             command.Description = "Transform tt template";
+            var fileOption = command.Option("-f|--file", "The T4 template to be transformed", CommandOptionType.SingleValue);
+            command.HelpOption(HelpTemplate);
+            command.OnExecute(() =>
+            {
+                var filePath = Path.Combine(Environment.CurrentDirectory, fileOption.Value());
+                if (TryFindProjectFile(filePath, out string projectFile) == false)
+                {
+                    throw new ProjectNotFoundException("Current work directory is not in a project directory");
+                }
 
+                // Resolve metadata
+                var resolver = Program.DI.GetService<IMetadataResolveable>();
+                resolver.ReadProject(projectFile);
+
+                return TransformTemplate(filePath);
+
+
+            });
+        }
+
+        static int TransformTemplate(string filePath)
+        {
+            var engin = Program.DI.GetService<Engine>();
+            var templateContent = File.ReadAllText(filePath);
+            var result = engin.ProcessT4Template(templateContent);
+            var host = Program.DI.GetService<ITextTemplatingEngineHost>();
+            var outputPath = Path.Combine(
+                Path.GetDirectoryName(filePath),
+                $"{Path.GetFileNameWithoutExtension(filePath)}.{host.FileExtension}");
+            File.WriteAllText(outputPath, result, host.Encoding);
+            return 0;
         }
 
         #endregion

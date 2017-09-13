@@ -29,6 +29,7 @@ namespace TextTemplating.Tools
                 Description = "A simple Text Template Transformer for .Net Core"
             };
             var process = app.Command("proc", AppCommands.ProcessCommand);
+            var transform = app.Command("trans", AppCommands.TransformCommand);
             app.HelpOption(helpTemplate);
             try
             {
@@ -37,6 +38,18 @@ namespace TextTemplating.Tools
             catch (CommandParsingException e)
             {
                 app.ShowHelp(e.Command.Name);
+                return 1;
+            }
+            catch (IOException e)
+            {
+                switch (e)
+                {
+                    case ProjectNotFoundException pe:
+                    case FileNotFoundException fe:
+                    case DirectoryNotFoundException de:
+                        Console.WriteLine(e.Message);
+                        break;
+                }
                 return 1;
             }
         }
