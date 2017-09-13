@@ -12,10 +12,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\TTGetMetadata.targets" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Resources\TTGetMetadata.targets" />
   </ItemGroup>
 
