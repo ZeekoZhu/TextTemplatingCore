@@ -23,11 +23,11 @@ namespace TextTemplating.Infrastructure
 
         public void SetOutputEncoding(Encoding encoding, bool fromOutputDirective) => Encoding = encoding;
 
-        public IList<string> StandardAssemblyReferences { get; } = new List<string>
-        {
-            "mscorlib",
-            "TextTemplating"
-        };
+        /// <inheritdoc />
+        /// <summary>
+        /// Share reference with project
+        /// </summary>
+        public IList<string> StandardAssemblyReferences { get; } = new List<string>();
 
         public IList<string> StandardImports { get; } = new List<string>
         {

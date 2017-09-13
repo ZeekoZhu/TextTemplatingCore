@@ -1,7 +1,6 @@
-using System;
 using System.IO;
 
-namespace TextTemplating.Tools
+namespace TextTemplating.Infrastructure
 {
     public class ProjectNotFoundException : FileNotFoundException
     {

@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Microsoft.CodeAnalysis;
+using TextTemplating.Infrastructure;
 
 namespace TextTemplating.Tools
 {
@@ -13,6 +15,8 @@ namespace TextTemplating.Tools
     /// </summary>
     class MsBuildProjectMetadataResolver : IMetadataResolveable
     {
+        public ProjectMetadata ProjectMetadata { get; set; }
+
         /// <inheritdoc />
         public ProjectMetadata ReadProject(string projectFilePath)
         {
@@ -61,19 +65,22 @@ namespace TextTemplating.Tools
                 Metadatas = new Dictionary<string, string>(metadatas)
             };
 
+            ProjectMetadata = projectMetadata;
             return projectMetadata;
-
         }
 
+
         /// <inheritdoc />
-        public List<string> GetReferencedAssembliesLocaltion(ProjectMetadata metadata)
+        public List<MetadataReference> ResolveMetadataReference(ProjectMetadata metadata = null)
         {
+            metadata = metadata ?? ProjectMetadata;
             var outputAssemblyPath = Path.Combine(metadata.ProjectDir, metadata.OutputPath, metadata.TargetFileName);
             var assembly = Assembly.LoadFile(outputAssemblyPath);
             return assembly
-                    .GetReferencedAssemblies()
-                    .Select(referenced => Assembly.Load(referenced).Location).ToList();
-
+                .GetReferencedAssemblies()
+                .Select(referenced => Assembly.Load(referenced).Location)
+                .Select(location => MetadataReference.CreateFromFile(location) as MetadataReference)
+                .ToList();
         }
     }
 }

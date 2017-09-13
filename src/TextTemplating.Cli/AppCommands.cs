@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using Microsoft.Extensions.CommandLineUtils;
+using Microsoft.Extensions.DependencyInjection;
 using TextTemplating.Infrastructure;
 
 namespace TextTemplating.Tools
@@ -15,6 +16,7 @@ namespace TextTemplating.Tools
         /// Find the projet that contains the file
         /// </summary>
         /// <param name="childFile"></param>
+        /// <param name="projectFile">Full path to project file</param>
         /// <returns></returns>
         static bool TryFindProjectFile(string childFile, out string projectFile)
         {
@@ -35,7 +37,7 @@ namespace TextTemplating.Tools
 
         #region Process
 
-        public static void Process(CommandLineApplication command)
+        public static void ProcessCommand(CommandLineApplication command)
         {
             command.Description = "Process template to CSharp class file for runtime transform";
             var fileOption = command.Option("-f|--file", "The texttemplate to be processed", CommandOptionType.SingleValue);
@@ -55,7 +57,7 @@ namespace TextTemplating.Tools
                 }
 
                 // Resolve metadata
-                var resolver = new MsBuildProjectMetadataResolver();
+                var resolver = Program.DI.GetService<IMetadataResolveable>();
                 var metadata = resolver.ReadProject(projectFile);
                 
 
@@ -89,12 +91,21 @@ namespace TextTemplating.Tools
         static int PreprocessTemplate(string file, string outPut, string className, string namespaceName)
         {
             var templatesRoot = Path.GetDirectoryName(file);
-            var host = new CommandLineEngineHost(templatesRoot);
-            var engin = new Engine(host);
+            var engin = Program.DI.GetService<Engine>();
             var templateContent = File.ReadAllText(file);
             var result = engin.PreprocessT4Template(templateContent, className, namespaceName);
             File.WriteAllText(outPut, result.PreprocessedContent);
             return 0;
+        }
+
+        #endregion
+
+        #region Transform
+
+        public static void TransformCommand(CommandLineApplication command)
+        {
+            command.Description = "Transform tt template";
+
         }
 
         #endregion

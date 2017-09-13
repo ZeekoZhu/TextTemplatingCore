@@ -8,10 +8,12 @@ namespace TextTemplating.Infrastructure
     public class Engine
     {
         private readonly ITextTemplatingEngineHost _host;
+        private readonly RoslynCompilationService _compilationService;
 
-        public Engine(ITextTemplatingEngineHost host)
+        public Engine(ITextTemplatingEngineHost host, RoslynCompilationService compilationService)
         {
             _host = host;
+            _compilationService = compilationService;
         }
 
         // todo add to cli tool
@@ -50,8 +52,8 @@ namespace TextTemplating.Infrastructure
 
             var preResult = PreprocessT4Template(content, className, classNamespace);
 
-            var compiler = new RoslynCompilationService(_host);
-            var transformationAssembly = compiler.Compile(assemblyName, preResult);
+            //var compiler = new RoslynCompilationService(_host);
+            var transformationAssembly = _compilationService.Compile(assemblyName, preResult);
 
             var transformationType = transformationAssembly.GetType(classNamespace + "." + className);
             var transformation = (TextTransformationBase)Activator.CreateInstance(transformationType);
@@ -59,53 +61,6 @@ namespace TextTemplating.Infrastructure
             transformation.Host = _host;
             return transformation.TransformText();
         }
-
-        //public PreprocessResult PreprocessRazorTemplate(string content, string className, string classNamespace)
-        //{
-        //    var language = new CSharpRazorCodeLanguage();
-        //    var razorHost = new RazorEngineHost(language)
-        //    {
-        //        DefaultBaseClass = typeof(TemplateBase).FullName,
-        //        DefaultNamespace = classNamespace,
-        //        DefaultClassName = className,
-        //        GeneratedClassContext = new GeneratedClassContext(
-        //            nameof(TemplateBase.ExecuteAsync),
-        //            nameof(TemplateBase.Write),
-        //            nameof(TemplateBase.WriteLiteral),
-        //            new GeneratedTagHelperContext())
-        //    };
-        //    razorHost.NamespaceImports.Add(classNamespace);
-
-        //    var razorEngine = new RazorTemplateEngine(razorHost);
-        //    var generatorResults = razorEngine.GenerateCode(new StringReader(content));
-        //    if (!generatorResults.Success)
-        //    {
-        //        throw new Exception(string.Join(Environment.NewLine, generatorResults.ParserErrors.Select(x => x.Message)));
-        //    }
-
-        //    var preprocessResult = new PreprocessResult()
-        //    {
-        //        PreprocessedContent = generatorResults.GeneratedCode,
-        //        References = _host.StandardImports.ToList(),
-        //    };
-
-        //    return preprocessResult;
-        //}
-
-        //public async Task<string> ProcessRazorTemplate(string content)
-        //{
-        //    var className = "GeneratedClass";
-        //    var classNamespace = "Generated";
-        //    var assemblyName = "Generated";
-
-        //    var preprocessResult = PreprocessRazorTemplate(content, className, classNamespace);
-
-        //    var compiler = new RoslynCompilationService(_libraryExporter, _host);
-        //    var assembly = compiler.Compile(assemblyName, preprocessResult);
-
-        //    var instanceType = assembly.GetType(classNamespace + "." + className);
-        //    var instance = (TemplateBase)Activator.CreateInstance(instanceType);
-        //    return await instance.GenerateCodeAsync();
-        //}
+        
     }
 }

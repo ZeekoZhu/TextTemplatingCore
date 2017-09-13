@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace TextTemplating.Tools
+namespace TextTemplating.Infrastructure
 {
     public class ProjectMetadata
     {
