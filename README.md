@@ -14,14 +14,14 @@ Add the following to  `YourProject.csproj`.
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="TextTemplating" Version="2.0.0-alpha4" />
+    <PackageReference Include="TextTemplating" Version="2.1.0-alpha1" />
 </ItemGroup>
 <ItemGroup>
-    <DotNetCliToolReference Include="TextTemplating.Tools" Version="2.0.0-alpha5" />
+    <DotNetCliToolReference Include="TextTemplating.Tools" Version="2.1.0-alpha1" />
 </ItemGroup>
 ```
 
-Now you can use the `dotnet t4` command as a command line tool to transform templates at design-time, with the specified command line arguments   
+Now you can use the `dotnet t4` command as a command line tool to transform templates at design-time, with the specified command line arguments.
 
 Run `dotnet t4 -h` to see the usage.
 
@@ -30,8 +30,10 @@ Example:
 dotnet t4 proc -f DbBase.tt
 ```
 
-### As a design time tool (Not Implemented)
-*Work in progres*
+### As a design time tool
+Add the same packages mentioned above, then you can run `dotnet t4 trans -f Person.tt` to transform a text template.
+
+Note: You can use all the packages that you have installed into your project when writing T4 template, so there may be no necessary to use "assembly" directive to reference assembly via assembly name(so I skipped these feature, you can also reference assembly via path).
 
 
 ### As a library
