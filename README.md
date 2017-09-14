@@ -9,6 +9,20 @@ This project's goal is to bring the old T4 text templating code generating appro
 The Visual Studio 2017 and Xamarin Studio now supports to process *.tt files in desing time, but this repo is maybe still useful who wants to process T4 templates in a dotnet core(netstandard2.0) project outside IDE (eg. in Linux or macOS with Visual Studio Code)
 
 ## How to use
+
+### Add myget source
+
+Add Nuget.Config File to your solution root with content below:
+```
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <packageSources>
+    <add key="NuGet.org" value="https://nuget.org/api/v3/" />
+    <add key="ZeekoGet" value="https://www.myget.org/F/zeekoget/api/v3/index.json" />
+  </packageSources>
+</configuration>
+```
+
 ### As a command line tool
 Add the following to  `YourProject.csproj`.
 

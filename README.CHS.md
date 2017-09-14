@@ -6,6 +6,20 @@
 到目前为之，微软手下的 IDE：Visual Studio 2017、Xamarin Studio 均对 T4 模板有较好的支持，但是在持续集成环境以及 Linux 下，这个项目还是非常有用的。你可以完全的脱离 IDE 来使用 T4 模板。
 
 ## 快速上手
+
+### 添加 MyGet 源
+
+在解决方案的根目录下创建一个 Nuget.Config 文件，内容如下：
+```
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <packageSources>
+    <add key="NuGet.org" value="https://nuget.org/api/v3/" />
+    <add key="ZeekoGet" value="https://www.myget.org/F/zeekoget/api/v3/index.json" />
+  </packageSources>
+</configuration>
+```
+
 ### 使用命令行工具
 把下面的片段加入到  `YourProject.csproj`.
 
