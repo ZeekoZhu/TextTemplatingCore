@@ -34,6 +34,7 @@ namespace TextTemplating.T4.Parsing
         /// T4 模板结束标记
         /// </summary>
         private static readonly Regex EndPattern = new Regex(@"#\>");
+        private static readonly Regex DirectiveEndPattern = new Regex($@"#\>({Environment.NewLine})?");
 
         public ParseResult Parse(string content)
         {
@@ -90,7 +91,7 @@ namespace TextTemplating.T4.Parsing
                 switch (match.Value)
                 {
                     case "<#@":
-                        nextPattern = EndPattern;
+                        nextPattern = DirectiveEndPattern;
                         start = match.Index + 3;
                         nextType = BlockType.Directive;
                         break;
@@ -114,8 +115,11 @@ namespace TextTemplating.T4.Parsing
                         break;
 
                     case "#>":
+                    case "#>\r":
+                    case "#>\n":
+                    case "#>\r\n":
+                        start = match.Index + match.Length;
                         nextPattern = StartPattern;
-                        start = match.Index + 2;
                         nextType = BlockType.TextBlock;
                         break;
 
