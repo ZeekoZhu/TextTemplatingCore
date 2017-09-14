@@ -10,7 +10,7 @@
 ### 添加 MyGet 源
 
 在解决方案的根目录下创建一个 Nuget.Config 文件，内容如下：
-```
+```xml
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
   <packageSources>
