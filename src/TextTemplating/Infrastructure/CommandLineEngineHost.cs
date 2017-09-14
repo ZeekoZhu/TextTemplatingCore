@@ -11,7 +11,7 @@ namespace TextTemplating.Infrastructure
 
         public string FileExtension { get; set; } = ".cs";
 
-        public Encoding Encoding { get; set; }
+        public Encoding Encoding { get; set; } = Encoding.UTF8;
 
         public string TemplateFilePath { get; }
 

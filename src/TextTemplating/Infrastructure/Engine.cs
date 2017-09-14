@@ -54,6 +54,7 @@ namespace TextTemplating.Infrastructure
 
             //var compiler = new RoslynCompilationService(_host);
             var transformationAssembly = _compilationService.Compile(assemblyName, preResult);
+            
 
             var transformationType = transformationAssembly.GetType(classNamespace + "." + className);
             var transformation = (TextTransformationBase)Activator.CreateInstance(transformationType);

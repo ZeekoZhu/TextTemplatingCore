@@ -11,6 +11,7 @@ namespace TextTemplating.Infrastructure
         public string RootNamespace => Metadatas[nameof(RootNamespace)];
         public string ProjectDir => Metadatas[nameof(ProjectDir)];
         public string TargetFileName => Metadatas[nameof(TargetFileName)];
+        public string ProjectFile { get; set; }
 
     }
 }

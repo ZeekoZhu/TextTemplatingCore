@@ -120,7 +120,7 @@ namespace TextTemplating.Tools
             var host = Program.DI.GetService<ITextTemplatingEngineHost>();
             var outputPath = Path.Combine(
                 Path.GetDirectoryName(filePath),
-                $"{Path.GetFileNameWithoutExtension(filePath)}.{host.FileExtension}");
+                $"{Path.GetFileNameWithoutExtension(filePath)}{host.FileExtension}");
             File.WriteAllText(outputPath, result, host.Encoding);
             return 0;
         }

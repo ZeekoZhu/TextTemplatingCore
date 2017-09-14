@@ -1,4 +1,7 @@
 <#@ import namespace="Newtonsoft.Json" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="DesignTimeSample" #>
+<#@ output extension=".json" #>
 
 <#
 var people = Enumerable.Range(0, 5).Select(num =>

@@ -16,6 +16,7 @@ namespace TextTemplating.Tools
     class MsBuildProjectMetadataResolver : IMetadataResolveable
     {
         public ProjectMetadata ProjectMetadata { get; set; }
+        private List<string> ReferencesPath { get; set; }
 
         /// <inheritdoc />
         public ProjectMetadata ReadProject(string projectFilePath)
@@ -65,6 +66,7 @@ namespace TextTemplating.Tools
                 Metadatas = new Dictionary<string, string>(metadatas)
             };
 
+            projectMetadata.ProjectFile = projectFile;
             ProjectMetadata = projectMetadata;
             return projectMetadata;
         }
@@ -74,14 +76,63 @@ namespace TextTemplating.Tools
         public List<MetadataReference> ResolveMetadataReference(ProjectMetadata metadata = null)
         {
             metadata = metadata ?? ProjectMetadata;
-            var outputAssemblyPath = Path.Combine(metadata.ProjectDir, metadata.OutputPath, metadata.TargetFileName);
-            var assembly = Assembly.LoadFile(outputAssemblyPath);
-            
-            return assembly
-                .GetReferencedAssemblies()
-                .Select(referenced => Assembly.Load(referenced).Location)
-                .Select(location => MetadataReference.CreateFromFile(location) as MetadataReference)
+
+            var targetName = "ResolveReferencePath.targets";
+            var outputPath = Path.Combine(metadata.ProjectDir, "obj", "Debug");
+            var referenceTargetPath = Path.Combine(metadata.ProjectDir, "obj",
+                $"{metadata.ProjectFile}.{targetName}");
+            var referencesFile = Path.Combine(metadata.ProjectDir, "obj", metadata.TargetFileName + ".references");
+
+            // Force CoreCompile targets to execute
+            if (Directory.Exists(outputPath))
+            {
+                Directory.Delete(outputPath, true);
+            }
+
+            if (File.Exists(referencesFile))
+            {
+                File.Delete(referencesFile);
+            }
+
+            // copy targets file to obj directory
+            string projectName = Assembly.GetExecutingAssembly().GetName().Name;
+            using (var targets = typeof(MsBuildProjectMetadataResolver).Assembly.GetManifestResourceStream($"{projectName}.Resources.{targetName}"))
+            using (var outputFile = File.OpenWrite(referenceTargetPath))
+            {
+                targets.CopyTo(outputFile);
+            }
+
+            // rebuild and generate reference list
+            var arg = "msbuild /v:q /nologo";
+            var processStartInfo = new ProcessStartInfo("dotnet", arg)
+            {
+                WorkingDirectory = metadata.ProjectDir,
+                UseShellExecute = false
+            };
+            var process = Process.Start(processStartInfo);
+            process.WaitForExit();
+
+            // read references path
+            var lines = File.ReadAllLines(referencesFile)
+                .Where(line => string.IsNullOrWhiteSpace(line) == false).ToList();
+            lines.Add(Path.Combine(metadata.ProjectDir, metadata.OutputPath, metadata.TargetFileName));
+            var metadataReferences = lines
+                .Select(path => MetadataReference.CreateFromFile(path) as MetadataReference)
                 .ToList();
+            File.Delete(referencesFile);
+
+
+            // load unreferenced assembly so that I can use them to run the compiled assembly
+            AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
+            {
+                var name = new AssemblyName(args.Name).Name + ".dll";
+                var assemblyPath = lines.FirstOrDefault(path => path.IndexOf(name, StringComparison.Ordinal) >= 0);
+                return assemblyPath == null ? null : Assembly.LoadFrom(assemblyPath);
+            };
+
+
+
+            return metadataReferences;
         }
     }
 }
