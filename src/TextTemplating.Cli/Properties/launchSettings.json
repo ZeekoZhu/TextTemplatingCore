@@ -2,7 +2,7 @@
   "profiles": {
     "dotnet-t4": {
       "commandName": "Project",
-      "commandLineArgs": "trans -f .\\Person.tt",
+      "commandLineArgs": "trans -f .\\Crud.tt",
       "workingDirectory": "C:\\Users\\vaezt\\Documents\\Repos\\TextTemplating\\samples\\DesignTimeSample"
     }
   }

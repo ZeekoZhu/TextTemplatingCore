@@ -1,0 +1,46 @@
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="DesignTimeSample" #>
+<#@ output extension=".cs" #>
+using Microsoft.AspNetCore.Mvc;
+<#
+string[] resources = new string[] {"value"};
+foreach(var res in resources)
+{
+    WriteControllerClass(res);
+}
+#>
+
+
+<#+
+public void WriteControllerClass(string resource)
+{
+    string[] actions = new string[] {"Get", "Delete", "Put", "Post"};
+#>
+public class <#=resource#>Controller : Controller
+{
+<#+
+PushIndent("    ");
+WriteActionMethod(actions);
+PopIndent();
+#>
+}
+<#+
+}
+#>
+
+
+<#+
+public void WriteActionMethod(string[] actions)
+{
+    foreach(var action in actions)
+    {
+#>
+[Http<#=action#>]
+public IActionResult <#=action#>()
+{
+    throw new NotImplementException();
+}
+<#+
+    }
+}
+#>

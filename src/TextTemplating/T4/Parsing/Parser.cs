@@ -175,7 +175,7 @@ namespace TextTemplating.T4.Parsing
                         count++;
                         break;
                     case '"':
-                        i = blockContent.IndexOf('"', i + 1) + 1;
+                        i = blockContent.IndexOf('"', i + 1);
                         break;
                     case '}':
                         count--;
