@@ -6,9 +6,11 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-        <PackageReference Include="TextTemplating" Version="2.1.0-alpha2" />
     </ItemGroup>
     <ItemGroup>
         <DotNetCliToolReference Include="TextTemplating.Tools" Version="2.1.0-alpha2" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\TextTemplating\TextTemplating.csproj" />
     </ItemGroup>
 </Project>

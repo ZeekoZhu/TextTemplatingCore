@@ -137,8 +137,8 @@ namespace TextTemplating.Test.T4PreprocessingTests
                 Content = @"console.log(""我的天啊:Oh My God!\r\n"");"
             };
             var result = _invokeRender(block);
-
-            result.Should().Be(@"Write(""console.log(\""我的天啊:Oh My God!\\r\\n\"");"");");
+            var target = @"Write(""console.log(\""我的天啊:Oh My God!\\r\\n\"");"");" + Environment.NewLine;
+            result.Should().Be(target);
         }
 
         [Fact]
@@ -247,7 +247,7 @@ Attribute:  "
 
             transformResult.Should().NotBeEmpty();
             var newLineRegex = new Regex("\r\n|\r|\n");
-            var expected =newLineRegex.Replace(@"using System;
+            var expected = newLineRegex.Replace(@"using System;
 using TextTemplating;
 using TextTemplating.Infrastructure;
 using TextTemplating.T4.Parsing;
@@ -262,8 +262,9 @@ namespace Test
 
             foreach (XmlAttribute attr in attributes)
             {
-
-                Write(""\r\nFound another one!\r\n"");
+                WriteLine();
+                Write(""Found another one!"");
+                WriteLine();
 
                 allAtributes.Add(attr.Name);
             }
@@ -273,9 +274,9 @@ namespace Test
 
         private void OutputFixedAttributeName(string name)
         {
-            Write(""\r\nAttribute:  "");
+            WriteLine();
+            Write(""Attribute:  "");
             Write((CultureInfo.CurrentCulture.TextInfo.ToTitleCase(name)).ToString());
-
         }
     }
 }

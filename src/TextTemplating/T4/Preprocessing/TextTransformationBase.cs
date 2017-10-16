@@ -65,7 +65,7 @@ namespace TextTemplating.T4.Preprocessing
 
         }
 
-        public void WriteLine(string textToAppend)
+        public void WriteLine(string textToAppend = "")
         {
             Write(textToAppend);
             GenerationEnvironment.AppendLine();

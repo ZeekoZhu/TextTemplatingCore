@@ -44,16 +44,17 @@ namespace TextTemplating.T4.Preprocessing
 
             foreach (var block in _result.ContentBlocks)
             {
-                WriteLine(Render(block));
+                Write(Render(block));
             }
-            WriteLine("");
+            WriteLine();
+            WriteLine();
             WriteLine("return GenerationEnvironment.ToString();");
             PopIndent();
             WriteLine("}");
 
             foreach (var block in _result.FeatureBlocks)
             {
-                WriteLine(Render(block));
+                Write(Render(block));
             }
 
             PopIndent();
@@ -77,7 +78,13 @@ namespace TextTemplating.T4.Preprocessing
             switch (block.BlockType)
             {
                 case BlockType.TextBlock:
-                    return $"Write(\"{block.Content.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\r", "\\r").Replace("\n", "\\n")}\");";
+                    var textLines = block.Content
+                        .Split(new[] {"\r\n", "\r", "\n"}, StringSplitOptions.None)
+                        .Select(line => string.IsNullOrEmpty(line)
+                            ? ""
+                            : $"Write(\"{line.Replace("\\", "\\\\").Replace("\"", "\\\"")}\");{Environment.NewLine}");
+                    return string.Join($"WriteLine();{Environment.NewLine}", textLines);
+                //return $"Write(\"{block.Content.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\r", "\\r").Replace("\n", "\\n")}\");";
 
                 case BlockType.StandardControlBlock:
                 case BlockType.ClassFeatureControlBlock:

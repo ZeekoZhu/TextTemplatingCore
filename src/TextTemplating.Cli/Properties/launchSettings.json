@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-t4": {
       "commandName": "Project",
-      "commandLineArgs": "trans -f .\\Crud.tt",
-      "workingDirectory": "C:\\Users\\vaezt\\Documents\\Repos\\TextTemplating\\samples\\DesignTimeSample"
+      "commandLineArgs": "proc -f .\\ApiClientTemplate.tt",
+      "workingDirectory": "C:\\Users\\vaezt\\Documents\\Repos\\TextTemplating\\samples\\RuntimeTemplateSample"
     }
   }
 }

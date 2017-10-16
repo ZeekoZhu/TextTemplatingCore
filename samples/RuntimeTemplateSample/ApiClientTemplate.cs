@@ -10,29 +10,48 @@ namespace RuntimeTemplateSample
     {
         public override string TransformText()
         {
-            Write("\r\n");
+            WriteLine();
 
             foreach (var api in Apis)
             {
                 WriteApi(api.Url, api.Method);
             }
+            WriteLine();
+            WriteLine();
+            WriteLine();
 
-            Write("\r\n\r\n");
-            Write("\r\n");
 
             return GenerationEnvironment.ToString();
         }
 
         private void WriteApi(string method, string url)
         {
-
-            Write("\r\nfunction GetValues(callback) {\r\n    $.ajax({\r\n        url: \"");
-            Write((url).ToString());
-            Write("\",\r\n        type: \"");
-            Write((method).ToString());
-            Write("\",\r\n        data: JSON.stringify(obj),\r\n        contentType: \"application/json\",\r\n        success: function (res) {\r\n            callback(res);\r\n        }\r\n    })\r\n}\r\n");
+            WriteLine();
+            Write("function GetValues(callback) {");
+            WriteLine();
+            Write("    $.ajax({");
+            WriteLine();
+            Write("        url: \"");
+            Write((url).ToString()); Write("\",");
+            WriteLine();
+            Write("        type: \"");
+            Write((method).ToString()); Write("\",");
+            WriteLine();
+            Write("        data: JSON.stringify(obj),");
+            WriteLine();
+            Write("        contentType: \"application/json\",");
+            WriteLine();
+            Write("        success: function (res) {");
+            WriteLine();
+            Write("            callback(res);");
+            WriteLine();
+            Write("        }");
+            WriteLine();
+            Write("    })");
+            WriteLine();
+            Write("}");
+            WriteLine();
 
         }
-
     }
 }
