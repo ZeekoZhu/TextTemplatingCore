@@ -1,6 +1,7 @@
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="DesignTimeSample" #>
 <#@ output extension=".cs" #>
+<#=Environment.CurrentDirectory#>
 using Microsoft.AspNetCore.Mvc;
 <#
 string[] resources = new string[] {"value"};
