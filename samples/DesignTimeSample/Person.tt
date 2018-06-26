@@ -3,7 +3,7 @@
 <#@ import namespace="DesignTimeSample" #>
 <#@ output extension=".json" #>
 
-<#
+[<#
 var people = Enumerable.Range(0, 5).Select(num =>
     new Person
     {
@@ -14,7 +14,8 @@ var people = Enumerable.Range(0, 5).Select(num =>
 foreach (var p in people)
 {
 #>
-<#=JsonConvert.SerializeObject(p)#>
+<#=JsonConvert.SerializeObject(p)#>,
 <#
 }
 #>
+]

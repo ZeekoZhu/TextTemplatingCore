@@ -23,7 +23,8 @@ namespace TextTemplating.Test.T4PreprocessingTests
             _host = new MockTemplatingHost();
             _transformer = new PreprocessTextTransformation("Test", "TestNs", null, _host);
             var renderAccessor = new PrivateObject(_transformer);
-            _invokeRender = block => renderAccessor.Invoke("Render", new[] { typeof(Block) }, new object[] { block }) as string;
+            _invokeRender = block =>
+                renderAccessor.Invoke("Render", new[] {typeof(Block)}, new object[] {block}) as string;
         }
 
         [Fact]
@@ -91,7 +92,8 @@ namespace TextTemplating.Test.T4PreprocessingTests
             _transformer.Write(content);
 
             var result = _transformer.GenerationEnvironment.ToString();
-            result.Should().Be($"    hello{Environment.NewLine}    world{Environment.NewLine}hello{Environment.NewLine}world");
+            result.Should()
+                .Be($"    hello{Environment.NewLine}    world{Environment.NewLine}hello{Environment.NewLine}world");
 
             _transformer.PushIndent("    ");
             _transformer.Write(content);
@@ -101,7 +103,8 @@ namespace TextTemplating.Test.T4PreprocessingTests
             _transformer.Write(content);
 
             result = _transformer.GenerationEnvironment.ToString();
-            result.Should().Be($"    hello{Environment.NewLine}    world{Environment.NewLine}hello{Environment.NewLine}world" +
+            result.Should().Be(
+                $"    hello{Environment.NewLine}    world{Environment.NewLine}hello{Environment.NewLine}world" +
                 $"hello{Environment.NewLine}    worldhello{Environment.NewLine}        worldhello{Environment.NewLine}    world");
         }
 
@@ -125,7 +128,8 @@ namespace TextTemplating.Test.T4PreprocessingTests
             _transformer.ClearIndent();
             _transformer.Write(content);
             var result = _transformer.GenerationEnvironment.ToString();
-            result.Should().Be($"    hello{Environment.NewLine}    world{Environment.NewLine}hello{Environment.NewLine}world");
+            result.Should()
+                .Be($"    hello{Environment.NewLine}    world{Environment.NewLine}hello{Environment.NewLine}world");
         }
 
         [Fact]
@@ -194,8 +198,8 @@ namespace TextTemplating.Test.T4PreprocessingTests
             {
                 new Block
                 {
-                BlockType = BlockType.StandardControlBlock,
-                Content = @"
+                    BlockType = BlockType.StandardControlBlock,
+                    Content = @"
 foreach (XmlAttribute attr in attributes)
 {
 "
@@ -282,9 +286,7 @@ namespace Test
 }
 ", Environment.NewLine);
 
-            transformResult.Should().Be(expected);
-
+            newLineRegex.Replace(transformResult, Environment.NewLine).Should().Be(expected);
         }
-
     }
 }

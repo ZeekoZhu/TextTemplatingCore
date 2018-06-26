@@ -50,11 +50,9 @@ namespace TextTemplating.Tools
                         Console.WriteLine(e.Message);
                         break;
                 }
+
                 return 1;
             }
         }
-
-
     }
 }
-
