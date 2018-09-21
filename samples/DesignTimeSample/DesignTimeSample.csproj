@@ -5,7 +5,7 @@
         <PackageId>DesignTimeSample</PackageId>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+        <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     </ItemGroup>
     <ItemGroup>
         <DotNetCliToolReference Include="TextTemplating.Tools" Version="2.2.0-alpha1" />
