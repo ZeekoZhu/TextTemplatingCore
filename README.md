@@ -1,5 +1,7 @@
 # TextTemplating
 
+**Mono/T4 has released a new dotnet core version, check it out! https://github.com/mono/t4**
+
 [中文说明](README.CHS.md)
 
 ## Goal
